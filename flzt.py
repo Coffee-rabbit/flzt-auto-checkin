@@ -1,10 +1,10 @@
 import requests
 from notification import ServerChanNotification
-from env import EMAIL, PASSWORD, LOGIN_URL, USER_INFO_URL, CONVERT_TRAFFIC_URL, CHECK_IN_URL
+from env import EMAIL, PASSWORD, LOGIN_URL, USER_INFO_URL, CHECK_IN_URL
 from loguru import logger
 
 
-def format_traffic(traffic, s='MB'):
+def format_traffic(traffic, s='GB'):
     if s == 'KB':
         return str(round(traffic / 1024, 2)) + 'KB'
     elif s == 'MB':
@@ -54,13 +54,13 @@ class FLZT:
             logger.error('获取用户信息失败', e)
             return
         # 转换流量
-        try:
-            r = self.s.post(url=CONVERT_TRAFFIC_URL,
-                            data={'transfer': traffic})
-            logger.info(f'转换流量: {r.json()}')
-        except Exception as e:
-            logger.error('转换流量失败', e)
-            return
+        # try:
+        #     r = self.s.post(url=CONVERT_TRAFFIC_URL,
+        #                     data={'transfer': traffic})
+        #     logger.info(f'转换流量: {r.json()}')
+        # except Exception as e:
+        #     logger.error('转换流量失败', e)
+        #     return
         notification = ServerChanNotification(
-            title='FLZT签到', content=f'签到流量转换成功，已转换的签到流量：{format_traffic(traffic)}')
+            title='FLZT签到', content=f'签到成功 剩余流量：{format_traffic(traffic)}')
         notification.notify()
